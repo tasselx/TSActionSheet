@@ -10,56 +10,48 @@
 
 @interface TSActionSheetPickerView()<UIPickerViewDataSource,UIPickerViewDelegate>
 
-@property(nonatomic,strong) UIPickerView *pickerView;
 @property(nonatomic) NSInteger currentRow;
 @end
 
 @implementation TSActionSheetPickerView
 
 
-
-- (void)setDelegate:(id<TSActionSheetPickerViewDelegate>)delegate
+- (void)setDataSource:(id<TSActionSheetPickerViewDataSource>)dataSource
 {
-    
-
-    _delegate=delegate;
+    _dataSource = dataSource;
     [self setupPickerView];
-
-
 }
 
 
 -(void)setupPickerView
 {
 
-    UIView *toobarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frontView.frame), 44)];
-    [toobarView.layer setBorderColor:[[UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1] CGColor]];
-    [toobarView.layer setBorderWidth:.5f];
-    [self.frontView addSubview:toobarView];
+    self.toobarView=[[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frontView.frame), 44)];
+    [self.toobarView.layer setBorderColor:[[UIColor colorWithRed:225/255.0 green:225/255.0 blue:225/255.0 alpha:1] CGColor]];
+    [self.toobarView.layer setBorderWidth:.5f];
+    [self.frontView addSubview:self.toobarView];
     
-    UIButton *doneButton=[UIButton buttonWithType:UIButtonTypeCustom];
-    [doneButton addTarget:self action:@selector(handleDone:) forControlEvents:UIControlEventTouchUpInside];
-    doneButton.titleLabel.font=[UIFont systemFontOfSize:15];
-    [doneButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
-    [doneButton setTitle:@"完成" forState:UIControlStateNormal];
-    [doneButton setFrame:CGRectMake(toobarView.frame.size.width-44,10, 44, 24)];
-    [toobarView addSubview:doneButton];
+    self.doneButton=[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.doneButton addTarget:self action:@selector(handleDone:) forControlEvents:UIControlEventTouchUpInside];
+    self.doneButton.titleLabel.font=[UIFont systemFontOfSize:15];
+    [self.doneButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
+    [self.doneButton setTitle:@"完成" forState:UIControlStateNormal];
+    [self.doneButton setFrame:CGRectMake(self.toobarView.frame.size.width-44,10, 44, 24)];
+    [self.toobarView addSubview:self.doneButton];
     
-    UIButton *cancelButton=[UIButton buttonWithType:UIButtonTypeCustom];
-    [cancelButton addTarget:self action:@selector(handleCancel:) forControlEvents:UIControlEventTouchUpInside];
-    cancelButton.titleLabel.font=[UIFont systemFontOfSize:15];
-    [cancelButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
-    [cancelButton setTitle:@"取消" forState:UIControlStateNormal];
-    [cancelButton setFrame:CGRectMake(10,10, 44, 24)];
-    [toobarView addSubview:cancelButton];
+    self.cancelButton=[UIButton buttonWithType:UIButtonTypeCustom];
+    [self.cancelButton addTarget:self action:@selector(handleCancel:) forControlEvents:UIControlEventTouchUpInside];
+    self.cancelButton.titleLabel.font=[UIFont systemFontOfSize:15];
+    [self.cancelButton setTitleColor:[UIColor colorWithRed:102/255.0 green:102/255.0 blue:102/255.0 alpha:1] forState:UIControlStateNormal];
+    [self.cancelButton setTitle:@"取消" forState:UIControlStateNormal];
+    [self.cancelButton setFrame:CGRectMake(10,10, 44, 24)];
+    [self.toobarView addSubview:self.cancelButton];
     
-    UIPickerView *pickerView=[[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.frontView.frame), CGRectGetHeight(self.frontView.frame))];
+    _pickerView=[[UIPickerView alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(self.frontView.frame), CGRectGetHeight(self.frontView.frame))];
    
-    pickerView.delegate=self;
-    pickerView.dataSource=self;
+    _pickerView.delegate=self;
+    _pickerView.dataSource=self;
     
-    _pickerView=pickerView;
-    pickerView=nil;
     [self.frontView addSubview:_pickerView];
 
 
@@ -97,13 +89,13 @@
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
 
-    return [self.delegate numberOfComponentsInPickerView:self];
+    return [self.dataSource numberOfComponentsInPickerView:self];
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
 
-    return [self.delegate pickerView:self numberOfRowsInComponent:component];
+    return [self.dataSource pickerView:self numberOfRowsInComponent:component];
 }
 
 -(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
@@ -117,7 +109,7 @@
         [tView setTextAlignment:NSTextAlignmentCenter];
         tView.numberOfLines=3;
     }
-    tView.text=[self.delegate pickerView:self titleForRow:row forComponent:component];
+    tView.text=[self.dataSource pickerView:self titleForRow:row forComponent:component];
     return tView;
 
 }

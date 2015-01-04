@@ -11,7 +11,7 @@
 
 @class TSActionSheetPickerView;
 
-@protocol TSActionSheetPickerViewDelegate <NSObject>
+@protocol TSActionSheetPickerViewDataSource <NSObject>
 
 @required
 
@@ -19,8 +19,11 @@
 - (NSInteger)pickerView:(TSActionSheetPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component;
 - (NSString*) pickerView:(TSActionSheetPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component;
 
-@optional
+@end
 
+@protocol TSActionSheetPickerViewDelegate <NSObject>
+
+@optional
 -(void)cancelSelect:(TSActionSheetPickerView *)pickerView;
 -(void)doneSelect:(TSActionSheetPickerView *)pickerView currentRow:(NSInteger)row;
 
@@ -30,6 +33,11 @@
 @interface TSActionSheetPickerView : TSActionSheet
 
 @property (nonatomic, assign)   id <TSActionSheetPickerViewDelegate>   delegate;
+@property (nonatomic, assign)   id <TSActionSheetPickerViewDataSource>   dataSource;
 
+@property(nonatomic,strong)UIView *toobarView;
+@property(nonatomic,strong)UIButton *doneButton;
+@property(nonatomic,strong)UIButton *cancelButton;
+@property(nonatomic,strong) UIPickerView *pickerView;
 
 @end
