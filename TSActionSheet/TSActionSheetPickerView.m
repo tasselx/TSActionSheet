@@ -16,9 +16,9 @@
 @implementation TSActionSheetPickerView
 
 
-- (void)setDataSource:(id<TSActionSheetPickerViewDataSource>)dataSource
+- (void)setDelegate:(id<TSActionSheetPickerViewDelegate>)delegate
 {
-    _dataSource = dataSource;
+    _delegate = delegate;
     [self setupPickerView];
 }
 
@@ -89,13 +89,13 @@
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
 {
 
-    return [self.dataSource numberOfComponentsInPickerView:self];
+    return [self.delegate numberOfComponentsInPickerView:self];
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
 {
 
-    return [self.dataSource pickerView:self numberOfRowsInComponent:component];
+    return [self.delegate pickerView:self numberOfRowsInComponent:component];
 }
 
 -(UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view
@@ -109,7 +109,7 @@
         [tView setTextAlignment:NSTextAlignmentCenter];
         tView.numberOfLines=3;
     }
-    tView.text=[self.dataSource pickerView:self titleForRow:row forComponent:component];
+    tView.text=[self.delegate pickerView:self titleForRow:row forComponent:component];
     return tView;
 
 }

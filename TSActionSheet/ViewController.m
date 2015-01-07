@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "TSActionSheetPickerView.h"
 
-@interface ViewController ()<TSActionSheetPickerViewDelegate,TSActionSheetPickerViewDataSource>
+@interface ViewController ()<TSActionSheetPickerViewDelegate>
 {
     TSActionSheetPickerView *actionSheetPicker;
 
@@ -69,7 +69,6 @@
    
     actionSheetPicker=[[TSActionSheetPickerView alloc] initWithFrame:CGRectMake(0, 0, 0, 260)];
     actionSheetPicker.delegate=self;
-    actionSheetPicker.dataSource = self;
 
     [actionSheetPicker showInView:self.view];
 
